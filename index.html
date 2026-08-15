@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devlys 010 हिंदी टाइपिंग ट्यूटर</title>
+    <style>
+        /* CSS: आधुनिक और साफ-सुथरा डिजाइन */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #4b5563;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        /* नियंत्रण पैनल (Controls) */
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            color: #374151;
+        }
+
+        select {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #cbd5e1;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* स्टेट्स पैनल (WPM, Accuracy, Timer) */
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .stat-box {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-bottom: 4px solid #3b82f6;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin-top: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* मुख्य टाइपिंग बॉक्स (Devlys 010 फॉन्ट सपोर्ट के साथ) */
+        #typing-box {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            min-height: 120px;
+            line-height: 1.8;
+            word-wrap: break-word;
+            outline: none;
+            border: 2px solid #e2e8f0;
+            transition: border 0.3s;
+        }
+
+        #typing-box:focus {
+            border-color: #3b82f6;
+        }
+
+        /* महत्वपूर्ण: गिटहब/ब्लॉगर पर बिना फॉन्ट इंस्टॉल किए भी Devlys 010 दिखेगा */
+        @font-face {
+            font-family: 'Devlys010';
+            src: url('https://cdnfonts.com') format('woff');
+        }
+
+        .devlys-text {
+            font-family: 'Devlys010', 'Courier New', monospace;
+            font-size: 32px;
+            letter-spacing: 1px;
+        }
+
+        /* अक्षर के रंग (सही, गलत, और वर्तमान) */
+        .char {
+            color: #64748b;
+            position: relative;
+        }
+
+        .correct {
+            color: #10b981 !important;
+            background-color: #ecfdf5;
+        }
+
+        .wrong {
+            color: #ef4444 !important;
+            background-color: #fef2f2;
+        }
+
+        .current {
+            color: #1e1e1e;
+            background-color: #dbeafe;
+            border-radius: 3px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { background-color: #dbeafe; }
+            50% { background-color: #93c5fd; }
+            100% { background-color: #dbeafe; }
+        }
+
+        /* हिडन इनपुट फोकस बनाए रखने के लिए */
+        #hidden-input {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+        }
+
+        .click-notice {
+            color: #3b82f6;
+            font-size: 14px;
+            margin-top: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Devlys 010 हिंदी टाइपिंग ट्यूटर</h1>
+    <div class="subtitle">सरकारी परीक्षाओं (LDC, High Court, SSC) के नवीनतम पैटर्न पर आधारित</div>
+
+    <!-- सेटिंग्स कंट्रोल -->
+    <div class="controls">
+        <div>
+            <label for="time-select">समय चुनें: </label>
+            <select id="time-select">
+                <option value="60">1 मिनट</option>
+                <option value="120">2 मिनट</option>
+                <option value="300">5 मिनट</option>
+                <option value="600">10 मिनट</option>
+            </select>
+        </div>
+        <div>
+            <label for="backspace-select">बैकस्पेस (Backspace): </label>
+            <select id="backspace-select">
+                <option value="allowed">चालू (Allowed)</option>
+                <option value="blocked">बंद (Blocked)</option>
+            </select>
+        </div>
+        <button id="reset-btn" style="padding: 8px 15px; background: #ef4444; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">रिसेट करें</button>
+    </div>
+
+    <!-- लाइव आंकड़े -->
+    <div class="stats-container">
+        <div class="stat-box">
+            <div class="stat-label">बचा हुआ समय</div>
+            <div id="timer" class="stat-value">01:00</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">स्पीड (WPM)</div>
+            <div id="wpm" class="stat-value">0</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">सटीकता (Accuracy)</div>
+            <div id="accuracy" class="stat-value">100%</div>
+        </div>
+    </div>
+
+    <!-- मुख्य टाइपिंग स्क्रीन -->
+    <div id="typing-box" class="devlys-text" tabindex="0">टेक्स्ट लोड हो रहा है...</div>
+    <div class="click-notice" id="focus-notice">टाइपिंग शुरू करने के लिए ऊपर बॉक्स पर क्लिक करें!</div>
+
+    <!-- छुपा हुआ इनपुट फील्ड मोबाइल/कीबोर्ड इवेंट्स कैप्चर करने के लिए -->
+    <input type="text" id="hidden-input" autocomplete="off" autofocus>
+
+    <script>
+        // Devlys 010 के लिए अभ्यास पैराग्राफ (यह इंग्लिश कैरेक्टर्स में लिखा जाता है ताकि स्क्रीन पर देवनागरी दिखे)
+        const devlysParagraphs = [
+            "B_k mUkj jke gSA og jkst+ Ldwy t_rk gSA mlds ikl ,d lqUnj fdr_c gSA mld_ ffe=k ‘_e mldh enn djrk gSA",
+            "fganh r_bZfiad lhf[k, v_j viuh xfr c<+kb, gSA y_bZ r_bZfiad VsLV l_j fdfYyL dks cgrj cukrk gSA jkst_ vHk_l djsAa",
+            "LkaL—fr v_j lH;rk dk fujUrj fod_l gks jg_ gSA gjsd ijhf{k_ dsfy, r_bZfiad VsLV mÙkh.kZ djuk v_of’kd gSA"
+        ];
+
+        // वेरिएबल्स डेफिनिशन
+        const typingBox = document.getElementById("typing-box");
+        const hiddenInput = document.getElementById("hidden-input");
+        const timerDisplay = document.getElementById("timer");
+        const wpmDisplay = document.getElementById("wpm");
+        const accuracyDisplay = document.getElementById("accuracy");
+        const timeSelect = document.getElementById("time-select");
+        const backspaceSelect = document.getElementById("backspace-select");
+        const resetBtn = document.getElementById("reset-btn");
+        const focusNotice = document.getElementById("focus-notice");
+
+        let textString = "";
+        let charIndex = 0;
+        let mistakes = 0;
+        let startTime = null;
+        let timerInterval = null;
+        let totalSeconds = 60;
+        let secondsLeft = 60;
+        let isTestActive = false;
+        let isTestFinished = false;
+
+        // टेस्ट लोड करने का फंक्शन
+        function initTest() {
+            clearInterval(timerInterval);
+            startTime = null;
+            charIndex = 0;
+            mistakes = 0;
+            isTestActive = false;
+            isTestFinished = false;
+            
+            totalSeconds = parseInt(timeSelect.value);
+            secondsLeft = totalSeconds;
+            updateTimerDisplay();
+            
+            wpmDisplay.innerText = "0";
+            accuracyDisplay.innerText = "100%";
+            hiddenInput.value = "";
+
+            // रैंडम पैराग्राफ चुनना
+            textString = devlysParagraphs[Math.floor(Math.random() * devlysParagraphs.length)];
+            
+            typingBox.innerHTML = "";
+            textString.split("").forEach((char, index) => {
+                const span = document.createElement("span");
+                span.classList.add("char");
+                span.innerText = char === " " ? " " : char;
+                if (index === 0) span.classList.add("current");
+                typingBox.appendChild(span);
+            });
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(secondsLeft / 60);
+            const seconds = secondsLeft % 60;
+            timerDisplay.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // टाइमर शुरू करना
+        function startTimer() {
+            isTestActive = true;
+            startTime = new Date();
+            timerInterval = setInterval(() => {
+                secondsLeft--;
+                updateTimerDisplay();
+                calculateStats();
+
+                if (secondsLeft <= 0) {
+                    endTest();
+                }
+            }, 1000);
+        }
+
+        // टेस्ट समाप्त होना
+        function endTest() {
+            clearInterval(timerInterval);
+            isTestActive = false;
+            isTestFinished = true;
+            typingBox.blur();
+            focusNotice.innerText = "टेस्ट पूरा हुआ! नया टेस्ट शुरू करने के लिए 'रिसेट करें' पर क्लिक करें।";
+            calculateStats();
+        }
+
+        // स्पीड और सटीकता कैलकुलेशन
+        function calculateStats() {
+            if (!startTime) return;
+            
+            let timeElapsed = (new Date() - startTime) / 60000; // मिनट में समय
+            if (timeElapsed <= 0) timeElapsed = 0.01; 
+
+            // 1. कुल टाइप किए गए शब्द (Gross Words)
+            const grossWords = charIndex / 5;
+            
+            // 2. कुल गलतियां (Mistakes) शब्दों के रूप में
+            const wordMistakes = mistakes; // परीक्षा में हर गलत शब्द या अक्षर पर पेनल्टी होती है
+
+            // 3. नेट शब्द (Net Words = कुल शब्द - गलतियां)
+            let netWords = grossWords - wordMistakes;
+            if (netWords < 0) netWords = 0; // स्पीड माइनस में न जाए
+
+            // 4. नेट स्पीड (Net WPM)
+            const wpm = Math.round(netWords / timeElapsed);
+            wpmDisplay.innerText = wpm >= 0 ? wpm : 0;
+
+            // सटीकता (Accuracy)
+            const accuracy = charIndex > 0 ? Math.round(((charIndex - mistakes) / charIndex) * 100) : 100;
+            accuracyDisplay.innerText = `${accuracy < 0 ? 0 : accuracy}%`;
+        } 
+    </script> 
+</body>
+</html>
