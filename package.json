@@ -1,0 +1,12 @@
+{
+  "name": "delys010-typing",
+  "version": "1.0.0",
+  "description": "Hindi Typing Tutor",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
