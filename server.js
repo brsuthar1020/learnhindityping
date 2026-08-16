@@ -6,9 +6,10 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
+// Devlys 010 वाले पैराग्राफ (यह स्क्रीन पर असली हिंदी में दिखेंगे)
 const typingPassages = [
-    "भारत एक विशाल और सुंदर देश है। यहाँ विभिन्न धर्मों और जातियों के लोग एक साथ मिलजुल कर रहते हैं।",
-    "कठिन परिश्रम ही सफलता की कुंजी है। जो व्यक्ति मेहनत करता है, वह जीवन में कभी असफल नहीं होता।"
+    "Hkkjr ,d fo'kky vkSj lqanj ns'k gSA ;gkWa fofHkUu /keksZa vkSj tkfr;ksa ds yksx ,d lkFk feytqy dj jgrs gSaA",
+    "dfBu ifjJe gh lQyrk dh dqath gSA tks O;fDr esgur djrk gS] og thou esa dHkh vlQy ugha gksrkA"
 ];
 
 app.get('/api/get-paragraph', (req, res) => {
